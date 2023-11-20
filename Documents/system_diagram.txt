@@ -32,7 +32,7 @@ UI_SlicerPlan --> UI_IGTLIN
 UI_SlicerVis <-- UI_IGTLOUT
 
 UI_IGTLOUT ---> CathRob_Planner : /subject/state/skin_entry \n geometry_msg/msg/Point
-CathRob_Planner --> CathRob_IK :
+CathRob_Planner --> CathRob_IK
 CathRob_IK --> CathRob_MotionController
 CathRob_Encoders --> CathRob_FK
 
