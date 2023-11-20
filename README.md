@@ -31,29 +31,16 @@ Then, clone the following repositories into the src folder of your ROS2 workspac
 ```bash
 cd ~/dev_ws/src
 git clone https://github.com/MRCathRob/SystemIntegration.git
-git clone https://github.com/MRCathRob/NeedleGuide.git
-git clone https://github.com/MRCathRob/trajcontrol.git
-git clone https://github.com/MRCathRob/ros2_needle_shape_publisher.git
-git clone https://github.com/MRCathRob/ros2_hyperion_interrogator.git
-```
-You also need to install the potentially missing requirements:
-- Download the python requirements in the `ros2_needle_shape_publisher` repo by running the command in the `ros2_needle_shape_publisher` cloned repo directory
-```bash
-cd ~/dev_ws/src/ros2_needle_shape_publisher
-pip install -r ./requirements.txt
+git clone https://github.com/MRCathRob/cathrob_hardware.git
+git clone https://github.com/MRCathRob/cathrob_kinematics.git
+git clone https://github.com/openigtlink/ros2_igtl_bridge.git
 ```
 - You might need to install control-msgs using:
 ```bash
-sudo apt install ros-foxy-control-msgs
+sudo apt install ros-humble-control-msgs
 ```
-OR manullay by cloning repository: https://github.com/ros-controls/control_msgs/tree/foxy-devel
+OR manullay by cloning repository: https://github.com/ros-controls/control_msgs/tree/humble-devel
 into the workspace 
-
-- Install the following python dependencies
-```bash
-python3 -m pip install numpy-quaternion
-pip install transforms3d
-```
 
 Lastly, build the workspace using: 
 ```bash

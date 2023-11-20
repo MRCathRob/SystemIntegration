@@ -1,7 +1,6 @@
 @startuml
 rectangle UI {
   usecase "3D Slicer (Visualization)" as UI_SlicerVis
-  usecase "3D Slicer (Patient Tracking)" as UI_SlicerPT
   usecase "3D Slicer (Planning)" as UI_SlicerPlan
   usecase "ros2_igtl_bridge (IN)" as UI_IGTLIN
   usecase "ros2_igtl_bridge (OUT)" as UI_IGTLOUT
@@ -9,38 +8,29 @@ rectangle UI {
   usecase "Activation Switch" as UI_Switch
 }
 
+rectangle "MR Scanner" {
+  usecase "Access-i" as MR_SRC
+  usecase "DICOM Server" as MR_DICOM_Server
+}
+
 rectangle "Trajectory Control" {
   usecase "Estimator" as Estimator
   usecase "Controller" as Controller
 }
 
-rectangle "Needle Shape Model" {
+rectangle "Cath Robot Kinematics" {
   usecase "Needle Deflection Model Node \n /needle/ShapeSensingNeedle" as NeedleModel_Deflection
   usecase "Needle Sensor Processing Node \n /needle/SensorizedNeedle" as NeedleModel_Sensor
   usecase "Needle Sensor Hardware Node \n /needle/HyperionStreamer" as NeedleModel_SensorHW
 }
 
-rectangle "End Effector" {
-  usecase "End Effector Controller Node" as End_ControllerNode
-}
-
-rectangle "End Effector Hardware" {
-  usecase "End Effector Controller" as EndHW_Controller
-  usecase "Needle Driver" as EndHW_NeedleDriver
-}
-
-rectangle "ROS2 Needle Guide Robot" {
+rectangle "Cath Robot Hardware" {
   usecase "Stage state builder node" as XY_Builder
   usecase "Needle Pose Sensor Node" as XY_Sensor
   usecase "Stage Control Node" as XY_Controller
 }
 
-rectangle "Needle Guide Hardware" {
-  usecase "Arduino software" as XYHW_Arduino
-  usecase "Needle Pose Sensors" as XYHW_Sensors
-  usecase "Stage Controller Newmark systems" as XYHW_Controller
-  usecase "XY Stage" as XYHW_Stage
-}
+MR_DICOM_Server --> UI_SlicerVis
 
 (Imager) --> UI_SlicerPT
 (Imager) --> UI_SlicerVis
