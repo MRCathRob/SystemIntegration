@@ -27,7 +27,6 @@ MR_DICOM_Server --> UI_SlicerVis
 :Operator: --> UI_Param
 :Operator: --> UI_Switch
 
-UI_SlicerPT --> UI_SlicerPlan
 UI_SlicerPlan --> UI_IGTLIN
 UI_SlicerVis <-- UI_IGTLOUT
 
