@@ -13,27 +13,15 @@ rectangle "MR Scanner" {
   usecase "DICOM Server" as MR_DICOM_Server
 }
 
-rectangle "Trajectory Control" {
-  usecase "Estimator" as Estimator
-  usecase "Controller" as Controller
-}
-
-rectangle "Cath Robot Kinematics" {
-  usecase "Needle Deflection Model Node \n /needle/ShapeSensingNeedle" as NeedleModel_Deflection
-  usecase "Needle Sensor Processing Node \n /needle/SensorizedNeedle" as NeedleModel_Sensor
-  usecase "Needle Sensor Hardware Node \n /needle/HyperionStreamer" as NeedleModel_SensorHW
-}
-
-rectangle "Cath Robot Hardware" {
-  usecase "Stage state builder node" as XY_Builder
-  usecase "Needle Pose Sensor Node" as XY_Sensor
-  usecase "Stage Control Node" as XY_Controller
+rectangle "Cath Robot" {
+  usecase "Inverse Kinematics" as CathRob_IK
+  usecase "Forward Kinematics" as CathRob_FK
+  usecase "Planner" as CathRob_Planner
+  usecase "Motion Controller" as CathRob_MotionControllers
+  usecase "Encoders" as CathRob_Encoders
 }
 
 MR_DICOM_Server --> UI_SlicerVis
-
-(Imager) --> UI_SlicerPT
-(Imager) --> UI_SlicerVis
 :Operator: --> UI_SlicerPlan
 :Operator: <-- UI_SlicerVis
 :Operator: --> UI_Param
@@ -43,32 +31,11 @@ UI_SlicerPT --> UI_SlicerPlan
 UI_SlicerPlan --> UI_IGTLIN
 UI_SlicerVis <-- UI_IGTLOUT
 
-UI_IGTLOUT ---> Controller : /subject/state/skin_entry \n geometry_msg/msg/Point
-UI_IGTLOUT ---> Controller : /subject/state/target \n geometry_msg/msg/Point
-Estimator --> Controller
-NeedleModel_Deflection --> Estimator : /needle/state/current_shape \n geometry_msgs/msg/PoseArray
-XY_Controller --> Estimator : /stage/state/needle_pose \n geometric_msgs/msg/PoseStamped
+UI_IGTLOUT ---> CathRob_Planner : /subject/state/skin_entry \n geometry_msg/msg/Point
+CathRob_Planner --> CathRob_IK :
+CathRob_IK --> CathRob_MotionController
+CathRob_Encoders --> CathRob_FK
 
-UI_IGTLOUT ---> NeedleModel_Deflection : /subject/state/skin_entry \n geometry_msgs/msg/Point
-NeedleModel_Deflection <-- NeedleModel_Sensor: /needle/state/curvatures \n std_msgs/msg/Float64MutliArray
-NeedleModel_Sensor <-- NeedleModel_SensorHW : /needle/sensor/processed \n std_msgs/msg/Float64MultiArray
-XY_Controller --> NeedleModel_Deflection: /stage/state/needle_pose \n geometry_msgs/msg/PoseStamped
+CathRob_FK --> UI_IGTLIN : /cathrob/state/current_shape \n geometry_msg/msg/PoseArray
 
-Controller ---> End_ControllerNode : /move_stage \n stage_control_interfaces/action/MoveStage
-'Controller ---> XY_Controller : /move_stage \n stage_control_interfaces/action/MoveStage
-
-End_ControllerNode --> EndHW_Controller
-EndHW_Controller --> EndHW_NeedleDriver
-
-XY_Builder --> UI_IGTLIN : /stage/state/needle_pose \n geometry_msgs/msg/PoseStamped
-XY_Sensor --> XY_Builder : /needle/state/pose \n geometry_msgs/msg/PoseStamped
-XY_Controller --> XY_Builder : /stage/state/pose \n geometry_msgs/msg/PoseStamped
-
-XY_Sensor <--- XYHW_Arduino
-XYHW_Arduino <-- XYHW_Sensors
-XY_Controller <--> XYHW_Controller
-XYHW_Controller <--> XYHW_Stage
-
-UI_Param ----> XY_Controller
-UI_Switch ----> XY_Controller
 @enduml
