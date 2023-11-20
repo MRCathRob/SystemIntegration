@@ -17,7 +17,7 @@ rectangle "Cath Robot" {
   usecase "Inverse Kinematics" as CathRob_IK
   usecase "Forward Kinematics" as CathRob_FK
   usecase "Planner" as CathRob_Planner
-  usecase "Motion Controller" as CathRob_MotionControllers
+  usecase "Motion Controller" as CathRob_MotionController
   usecase "Encoders" as CathRob_Encoders
 }
 
