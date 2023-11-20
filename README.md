@@ -1,10 +1,10 @@
-Smart Needle System Integration
-===============================
+MR Catheterization Robot System Integration
+===========================================
 
 Overview
 --------
 
-This is the main repository of the Smart Needle project. This repository contains:
+This repository contains:
 
 - Specification of the system (see [System Overview](#overview))
 - ROS master launch file (see [Installation](#installation) and [Usage](#usage))
@@ -18,23 +18,23 @@ Please refer to the [System Architecture Page](Documents/index.md) for the detai
 Installation <a name="installation"></a>
 ------------
 The following steps were tested on:
-- Ubuntu 20.4 + ROS2 Foxy
+- Ubuntu 22.04 + ROS2 Humble
 
 First, install ROS 2 following the ROS 2 Documentation and create your ROS2 workspace following the documentation as follows:
 ```bash
-source /opt/ros/foxy/setup.bash
+source /opt/ros/humble/setup.bash
 mkdir -p ~/dev_ws/src
 cd ~/dev_ws/
-rosdep install -i --from-path src --rosdistro foxy -y # Make sure to resolve dependency
+rosdep install -i --from-path src --rosdistro humble -y # Make sure to resolve dependency
 ```
 Then, clone the following repositories into the src folder of your ROS2 workspace: SystemIntegration, NeedleGuide, trajcontrol, ros2_needle_shape_publisher and ros2_hyperion_interrogator. 
 ```bash
 cd ~/dev_ws/src
-git clone https://github.com/SmartNeedle/SystemIntegration.git
-git clone https://github.com/SmartNeedle/NeedleGuide.git
-git clone https://github.com/SmartNeedle/trajcontrol.git
-git clone https://github.com/SmartNeedle/ros2_needle_shape_publisher.git
-git clone https://github.com/SmartNeedle/ros2_hyperion_interrogator.git
+git clone https://github.com/MRCathRob/SystemIntegration.git
+git clone https://github.com/MRCathRob/NeedleGuide.git
+git clone https://github.com/MRCathRob/trajcontrol.git
+git clone https://github.com/MRCathRob/ros2_needle_shape_publisher.git
+git clone https://github.com/MRCathRob/ros2_hyperion_interrogator.git
 ```
 You also need to install the potentially missing requirements:
 - Download the python requirements in the `ros2_needle_shape_publisher` repo by running the command in the `ros2_needle_shape_publisher` cloned repo directory
