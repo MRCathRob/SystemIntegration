@@ -1,45 +1,87 @@
 @startuml
-rectangle "UI (3D Slicer) {
-  usecase "Visualization" as UI_SlicerVis
-  usecase "Planning" as UI_SlicerPlan
-  usecase "ros2_igtl_bridge (IN)" as UI_IGTLIN
-  usecase "ros2_igtl_bridge (OUT)" as UI_IGTLOUT
-  usecase "Robot Parameter Setting GUI" as UI_Param
-  usecase "Robot Control GUI" as UI_Switch
+skinparam actorStyle awesome
+package "UI (3D Slicer)" {
+  usecase "Visualization" as UI_Vis
+  usecase "Planning" as UI_Planning
+  usecase "Robot Parameter Setting GUI" as UI_Robot_Param
+  usecase "Robot Control GUI" as UI_Robot_Control
+  usecase "MRML" as UI_MRML
+  usecase "DICOM IO" as UI_DICOM_IO
+  usecase "OpenIGTLink IO" as UI_IGTL
 }
 
-rectangle "MR Scanner" {
+
+package "Bridge" {
+  usecase "ros2_igtl_bridge" as Bridge_IGTL
+}
+
+package "MR Scanner" {
+  usecase "Console" as MR_UI
+  usecase "Recon" as MR_Recon
   usecase "Access-i" as MR_SRC
   usecase "DICOM Server" as MR_DICOM_Server
+  usecase "Pulse Sequence" as MR_PS
+  usecase "Hardware" as MR_Hardware
 }
 
+package "Cath Robot" {
 rectangle "Cath Robot (Master)" {
-  usecase "Hardware" as CathRob_Master_Hardware
-  usecase "ROS Master Manipulator Node" as CathRob_Master_Node
+  usecase "Hardware" as Master_Hardware
+  usecase "ROS Master Manipulator Node" as Master_Node
 }
 
 rectangle "Cath Robot (Slave)" {
-  usecase "Inverse Kinematics (IK)" as CathRob_IK
-  usecase "Forward Kinematics (FK)" as CathRob_FK
-  usecase "Planner" as CathRob_Planner
-  usecase "Motion Controller" as CathRob_MotionController
-  usecase "Hardware" as CathRob_Slave_Hardware
+  usecase "Inverse Kinematics (IK)" as Slave_IK
+  usecase "Forward Kinematics (FK)" as Slave_FK
+  usecase "Planner" as Slave_Planner
+  usecase "Motion Controller" as Slave_Motion_Controller
+  usecase "Hardware" as Slave_Hardware
+}
 }
 
-MR_DICOM_Server --> UI_SlicerVis
-:Operator: --> UI_SlicerPlan
-:Operator: <-- UI_SlicerVis
-:Operator: --> UI_Param
-:Operator: --> UI_Switch
 
-UI_SlicerPlan --> UI_IGTLIN
-UI_SlicerVis <-- UI_IGTLOUT
+:Operator: --> UI_Robot_Control
+:Operator: --> UI_Robot_Param
+:Operator: --> UI_Planning
+:Operator: --> MR_UI
 
-UI_IGTLOUT ---> CathRob_Planner : /subject/state/skin_entry \n geometry_msg/msg/Point
-CathRob_Planner --> CathRob_IK
-CathRob_IK --> CathRob_MotionController
-CathRob_Encoders --> CathRob_FK
+UI_Robot_Param --> UI_MRML
+UI_Robot_Param <-- UI_MRML
+UI_Robot_Control --> UI_MRML
+UI_Robot_Control <-- UI_MRML
+UI_Planning --> UI_MRML
+UI_Planning <-- UI_MRML
+UI_MRML --> UI_IGTL
+UI_IGTL --> UI_MRML
 
-CathRob_FK --> UI_IGTLIN : /cathrob/state/current_shape \n geometry_msg/msg/PoseArray
+UI_IGTL --> Bridge_IGTL
+UI_IGTL <-- Bridge_IGTL
 
-@enduml
+MR_DICOM_Server --> UI_DICOM_IO
+MR_SRC --> UI_IGTL
+MR_SRC <-- UI_IGTL
+MR_UI --> MR_Recon
+MR_UI <-- MR_DICOM_Server
+MR_UI --> MR_SRC
+MR_UI --> MR_PS
+MR_PS --> MR_Hardware
+MR_Recon --> MR_SRC
+MR_Recon --> MR_DICOM_Server
+MR_Recon <-- MR_Hardware
+
+
+UI_DICOM_IO --> UI_MRML
+UI_MRML --> UI_Vis
+
+
+:Operator: -> Master_Hardware
+Master_Hardware --> Master_Node
+Master_Node -> Slave_Planner
+
+Bridge_IGTL ---> Slave_Planner
+Slave_Planner --> Slave_IK
+Slave_IK --> Slave_Motion_Controller
+Slave_Motion_Controller --> Slave_Hardware
+Slave_Hardware --> Slave_FK
+
+Slave_FK --> Bridge_IGTL
