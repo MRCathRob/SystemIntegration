@@ -1,11 +1,11 @@
 @startuml
-rectangle UI {
-  usecase "3D Slicer (Visualization)" as UI_SlicerVis
-  usecase "3D Slicer (Planning)" as UI_SlicerPlan
+rectangle "UI (3D Slicer) {
+  usecase "Visualization" as UI_SlicerVis
+  usecase "Planning" as UI_SlicerPlan
   usecase "ros2_igtl_bridge (IN)" as UI_IGTLIN
   usecase "ros2_igtl_bridge (OUT)" as UI_IGTLOUT
-  usecase "Parameter Setting" as UI_Param
-  usecase "Activation Switch" as UI_Switch
+  usecase "Robot Parameter Setting GUI" as UI_Param
+  usecase "Robot Control GUI" as UI_Switch
 }
 
 rectangle "MR Scanner" {
@@ -13,12 +13,17 @@ rectangle "MR Scanner" {
   usecase "DICOM Server" as MR_DICOM_Server
 }
 
-rectangle "Cath Robot" {
-  usecase "Inverse Kinematics" as CathRob_IK
-  usecase "Forward Kinematics" as CathRob_FK
+rectangle "Cath Robot (Master)" {
+  usecase "Hardware" as CathRob_Master_Hardware
+  usecase "ROS Master Manipulator Node" as CathRob_Master_Node
+}
+
+rectangle "Cath Robot (Slave)" {
+  usecase "Inverse Kinematics (IK)" as CathRob_IK
+  usecase "Forward Kinematics (FK)" as CathRob_FK
   usecase "Planner" as CathRob_Planner
   usecase "Motion Controller" as CathRob_MotionController
-  usecase "Encoders" as CathRob_Encoders
+  usecase "Hardware" as CathRob_Slave_Hardware
 }
 
 MR_DICOM_Server --> UI_SlicerVis
