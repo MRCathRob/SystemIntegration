@@ -1,14 +1,6 @@
 MR Catheterization Robot System Integration
 ===========================================
 
-Overview
---------
-
-This repository contains:
-
-- Specification of the system (see [System Overview](#overview))
-- ROS master launch file (see [Installation](#installation) and [Usage](#usage))
-
 System Overview <a name="overview"></a>
 ---------------
 
