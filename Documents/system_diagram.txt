@@ -45,6 +45,7 @@ rectangle "Cath Robot (Slave)" {
 :Operator: --> UI_Planning
 :Operator: --> MR_UI
 
+@enduml
 UI_Robot_Param --> UI_MRML
 UI_Robot_Param <-- UI_MRML
 UI_Robot_Control --> UI_MRML
