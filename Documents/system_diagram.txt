@@ -1,4 +1,5 @@
 @startuml
+
 skinparam actorStyle awesome
 package "UI (3D Slicer)" {
   usecase "Visualization" as UI_Vis
@@ -86,3 +87,6 @@ Slave_Motion_Controller --> Slave_Hardware
 Slave_Hardware --> Slave_FK
 
 Slave_FK --> Bridge_IGTL
+
+@enduml
+
