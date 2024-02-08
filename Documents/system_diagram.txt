@@ -46,46 +46,43 @@ rectangle "Cath Robot (Slave)" {
 :Operator: --> UI_Planning
 :Operator: --> MR_UI
 
-UI_Robot_Param --> UI_MRML
-UI_Robot_Param <-- UI_MRML
-UI_Robot_Control --> UI_MRML
-UI_Robot_Control <-- UI_MRML
-UI_Planning --> UI_MRML
-UI_Planning <-- UI_MRML
-UI_MRML --> UI_IGTL
-UI_IGTL --> UI_MRML
+UI_Robot_Param --> UI_MRML : Control parameters
+UI_Robot_Param <-- UI_MRML : Current parameters
+UI_Robot_Control --> UI_MRML : Command
+UI_Robot_Control <-- UI_MRML : Robot status
+UI_Planning --> UI_MRML : Target path
+UI_Planning <-- UI_MRML : Current path
+UI_MRML --> UI_IGTL : Parameters/Command/Path
+UI_IGTL --> UI_MRML : Current robot status
 
-UI_IGTL --> Bridge_IGTL
-UI_IGTL <-- Bridge_IGTL
+UI_IGTL --> Bridge_IGTL : Parameters/Command/Path
+UI_IGTL <-- Bridge_IGTL : Robot path/status
 
-MR_DICOM_Server --> UI_DICOM_IO
-MR_SRC --> UI_IGTL
-MR_SRC <-- UI_IGTL
-MR_UI --> MR_Recon
-MR_UI <-- MR_DICOM_Server
-MR_UI --> MR_SRC
-MR_UI --> MR_PS
-MR_PS --> MR_Hardware
-MR_Recon --> MR_SRC
-MR_Recon --> MR_DICOM_Server
-MR_Recon <-- MR_Hardware
+MR_DICOM_Server --> UI_DICOM_IO : Static image
+MR_SRC --> UI_IGTL : Realtime image
+MR_SRC <-- UI_IGTL : Command
+MR_UI --> MR_Recon : Parameters
+MR_UI <-- MR_DICOM_Server : image list
+MR_UI --> MR_SRC : Command
+MR_UI --> MR_PS : Parameters
+MR_PS --> MR_Hardware : Instructions
+MR_Recon --> MR_SRC : Real-time image
+MR_Recon --> MR_DICOM_Server : Static image
+MR_Recon <-- MR_Hardware : Signal data
 
+UI_DICOM_IO --> UI_MRML : Static image
+UI_MRML --> UI_Vis : Static image
 
-UI_DICOM_IO --> UI_MRML
-UI_MRML --> UI_Vis
+:Operator: -> Master_Hardware : Input 
+Master_Hardware --> Master_Node : Command
+Master_Node -> Slave_Planner : Target
 
+Bridge_IGTL ---> Slave_Planner : Command
+Slave_Planner --> Slave_IK : Target path
+Slave_IK --> Slave_Motion_Controller : Target joint positions
+Slave_Motion_Controller --> Slave_Hardware : Signal
+Slave_Hardware --> Slave_FK : Encoder readings
 
-:Operator: -> Master_Hardware
-Master_Hardware --> Master_Node
-Master_Node -> Slave_Planner
-
-Bridge_IGTL ---> Slave_Planner
-Slave_Planner --> Slave_IK
-Slave_IK --> Slave_Motion_Controller
-Slave_Motion_Controller --> Slave_Hardware
-Slave_Hardware --> Slave_FK
-
-Slave_FK --> Bridge_IGTL
+Slave_FK --> Bridge_IGTL : Robot status/path
 
 @enduml
-
